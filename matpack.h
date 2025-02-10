@@ -4,20 +4,21 @@
 									Documentation
 #############################################################################################################################################################
 
-Matpack is the package written to perform basic operations on matrices such as addition, scalar multiplication, scalar multiplication, transposing, etc.
-and several functions are written to perform the same. There are certain guidelines that the user must adhere to for the smooth running of the package.
+Matpack is the package written to perform basic operations on matrices such as addition, scalar multiplication, transposing, etc.
+and several functions are written to perform those. There are certain guidelines that the user must adhere to for the smooth running of the package.
 
 The package defines a data structure called `matrix' which is supposed to represent the matrix from linear algebra. The structure of matrix and its 
-contents are provided in its definition. `matrix' stores the size of the matrix in two int variables 'row' and 'column' and it stores the actual entries 
-of matrix inside the object: array of pointers to 'double' arrays (double **).
+contents are provided in its definition. `matrix' stores the size of the matrix in two int variables 'row' and 'column' and it stores the actual elements 
+of the matrix inside the object: array of pointers to array of "doubles" (double **).
 
 Someone with sufficient knowledge of the C language can easily see that the object (double **) is just the address of a pointer and not an array. Thus, 
 the datastructure should always be followed by the function `matrix_init(int num_row, int num_col, matrix* A)' that initialises it to have appropriate 
 size. The user must initialise a declared variable of the type `matrix' with the said function before doing any further operations.
 
-The `matrix_init' functassignment to ‘double **’ from incompatible ion uses calloc() function from <stdlib.h> to allocate the memory required for storing the matrix. Thus, the user is adviced to free the memory that is used to store the matrix after the matrix is no longer required or at the end of the program they write. This will avoid potential 
-memory leaks when the program is run for multiple times in a row. A function `free_matrix(matrix *A)' is also written to do the same. The user can proceed 
-to use the function to free the matrix defined using matrix_init function, in the following way
+The `matrix_init' functassignment to ‘double **’ from incompatible ion uses calloc() function from <stdlib.h> to allocate the memory required for storing the matrix.
+Thus, the user is adviced to free the memory that is used to store the matrix after the matrix is no longer required or at the end of the program they write.
+This will avoid potential memory leaks when the program is run for multiple times in a row. A function `free_matrix(matrix *A)' is also written to do the same. 
+The user can proceed to use the function to free the matrix defined using matrix_init function, in the following way
 
 	Let us suppose we declare and initialise a matrix variable:
 		matrix B;
@@ -27,7 +28,7 @@ to use the function to free the matrix defined using matrix_init function, in th
 		.......some process involving B		
 		//
 		
-		free_matrix(&B);							//Using this line the user can free the memory that was allocated for
+		free_matrix(&B);						//Using this line the user can free the memory that was allocated for
 										matrix B on the heap. Once this step is completed the user will not be 
 										able to access the contents of the matrix B. This should only be used 
 										only when the matrix B is no longer required for the program.
@@ -84,6 +85,7 @@ void matrix_init(int num_row, int num_col, matrix *A);
 
 
 void free_matrix(matrix *A);
+//function to free the memory allocated for a matrix.
 /*
 	args:		matrix *A			Matrix whose allocated memory is to be freed
 	
