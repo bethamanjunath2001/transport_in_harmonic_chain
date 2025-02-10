@@ -17,15 +17,22 @@ function (matpack). They can just assign the matrix that they want to read into 
 For the functions in this package where there are intermediate matrix variables needed in the calculations, the memory is properly allocated and freed always.
 When the functions in this package output a matrix variable the user should define a matrix variable before and read the output of the function by assigning it to the defined matrix using '='.
 They should remember to free the matrix when the job is done.
+The user is adviced to free the memory they allocated for any matrix once they are no longer required. The ways to do these operations are described in the header file matpack.h.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 Let us look at an example:
+////Example starts
+matrix A;			//initialise a matrix variable
+matrix_init(m, n, &A);		//Allocating a (mXn) matrix variable to read the output of a function
+A = generic_function(list of all the input variables separated by commas)	//Here generic function should output an mXn matrix. The user should take care that the dimensions of the output matches with the defined matrix variable.
 
-matrix A;
-matrix_init(A, m, n);		//initialise a mXn matrix variable to read the output of a function
+//Do whatever is to be done with matrix A.
 
+free_matrix(A);			//freeing the memory allocated for the matrix
+////Example ends
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 *** 
-
-The user is adviced to free the memory they allocated 
-for any matrix once they are no longer required. The ways to do these operations are described in the header file matpack.h.
 
 The functions in this package are declared and documented with all the necessary information in the header file given below. The user can refer to the same 
 while trying to use the package.
@@ -62,7 +69,7 @@ CHEERS!!! FELLOW COMPUTATIONAL PHYSICIST!!!
 //###########################################################################################//
 //##################Defining data types of required for the harmonic chain###################//
 //###########################################################################################//
-
+//This datatype is used in our calculations so that multiple operations can be done on multiple scalar variable at once. The operations are initialised and explained below.
 typedef struct vector{
 	double array[VEC_LEN];
 }vector;
@@ -92,7 +99,7 @@ void logo();
 
 
 double omegal(int size, int ind);							
-//function to calculate omega_l's (eigenvalues)
+//function to calculate eigenvalues (omega_l)
 /*
 	args:		int size			:size of the system i.e., number of particles.
 			int ind				:index of the eigenvalue which we want to find
@@ -105,7 +112,7 @@ double omegal(int size, int ind);
 
 
 matrix make_quad_form_Omega(int size);
-//function to make the matrix Omega which is the matrix inside the quadratic form of the Hamiltonian of harmonic chain.
+//function to make the matrix Omega which is the tridiagonal matrix inside the quadratic form of the Hamiltonian of harmonic chain. Omega_{m n} = 2*delta_{m n} - delta_{m (n-1)} - delta{m (n+1)}.
 /*
 	args: 		int size 	:size of the system i.e.,number of particles.
 	
@@ -115,7 +122,7 @@ matrix make_quad_form_Omega(int size);
 
 
 matrix make_U(int size);								
-//function to make the transformation matrix U
+//function to make the diagonal transformation matrix U of Omega
 /*
 	args: 		int size 	:size of the system i.e.,number of particles.
 	
@@ -125,7 +132,7 @@ matrix make_U(int size);
 
 
 matrix make_eigenvector(int size, int ind);
-//function to make the lth eigenvector of the system (Harmonic chain) of given size.
+//function to make the lth normalised eigenvector of Omega for a given system size.
 /*
 	args: 		int size 	:size of the system i.e.,number of particles.
 			int ind 	:index of the eigenvector
@@ -136,7 +143,7 @@ matrix make_eigenvector(int size, int ind);
 
 
 matrix make_W(int size);								
-//function to make the diagonal matrix of eigenvalues W
+//function to make the diagonal matrix of eigenvalues W for a given system size.
 /*
 	args: 		int size 	:size of the system i.e.,number of particles.
 	
@@ -154,7 +161,7 @@ matrix make_invW(int size);
 
 
 matrix make_cosWt(int size, double time);						
-//function to make the diagonal matrix of cosines of omega_nt's
+//function to make the diagonal matrix of cosines of omega_n*t
 /*
 	args: 		int size 		:size of the system i.e.,number of particles.
 			double time	:time instant at which we want to calculate this time dependent matrix function.
@@ -164,7 +171,7 @@ matrix make_cosWt(int size, double time);
 
 
 matrix make_sinWt(int size, double time);						
-//function to make the diagonal matrix of sines of omega_nt's
+//function to make the diagonal matrix of sines of omega_n*t
 /*
 	args: 		int size 		:size of the system i.e.,number of particles.
 			double time	:time instant at which we want to calculate this time dependent matrix function.
@@ -174,7 +181,7 @@ matrix make_sinWt(int size, double time);
 
 
 matrix gen_rand_x0(int size, bool negatives);								
-//function to randomly generate initial displacement
+//function to randomly generate initial displacement vector of the system
 /*
 	args: 		int size 		:size of the system i.e.,number of particles.
 			bool negatives		:This decides if the random numbers generated are in the interval
@@ -187,7 +194,7 @@ matrix gen_rand_x0(int size, bool negatives);
 
 
 matrix gen_rand_xdot0(int size, bool negatives);							
-//function to randomly generate initial velocities 
+//function to randomly generate initial velocity vector of the system
 /*
 	args: 		int size 		:size of the system i.e.,number of particles.
 			bool negatives		:This decides if the random numbers generated are in the interval
@@ -200,7 +207,7 @@ matrix gen_rand_xdot0(int size, bool negatives);
 
 
 double xloft(int size, int part_ind, double time, matrix x0, matrix xdot0, bool tilde);		
-//function to calculate dispacement of one particle
+//function to calculate dispacement of one particle at a later time given some initial conditions
 /*
 	args:		int size			:size of the system i.e., number of particles.
 			int part_ind			:index of the particle for which we want to find out final displacement
@@ -221,7 +228,7 @@ double xloft(int size, int part_ind, double time, matrix x0, matrix xdot0, bool 
 
 
 double xldotoft(int size, int part_ind, double time, matrix x0, matrix xdot0, bool tilde);		
-//function to calculate dispacement of one particle
+//function to calculate velocity of one particle at at time given some initial conditions
 /*
 	args:		int size			:size of the system i.e., number of particles.
 			int part_ind			:index of the particle for which we want to find out final displacement
@@ -243,7 +250,7 @@ double xldotoft(int size, int part_ind, double time, matrix x0, matrix xdot0, bo
 
 
 matrix xoft(int size, double time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate final displacement vectors at a given time and initial conditions
+//function to calculate final displacement vector at a later time given some initial condition vectors
 /*
 	args:		int size				:size of the system, i.e., number of particles
 			double time			:final time variable at which we want to calculate
@@ -261,7 +268,7 @@ matrix xoft(int size, double time, matrix x0, matrix xdot0, bool tilde);
 
 
 matrix xdotoft(int size, double time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate final displacement vectors at a given time and initial conditions
+//function to calculate final velocity vector at a later time given some initial condition vectors
 /*
 	args:		int size				:size of the system, i.e., number of particles
 			double time			:final time variable at which we want to calculate
@@ -278,11 +285,11 @@ matrix xdotoft(int size, double time, matrix x0, matrix xdot0, bool tilde);
 
 
 double e_part(int size, int ind, double time, matrix x0, matrix xdot0);
-//function to calculate energy of 1 particle
+//function to calculate energy of a single particle in the chain at a time t given the initial condition vectors
 /*
 	args:		int size				:size of the system
 			int ind					:index of the particle for which the energy is to be calculated
-			double time			:Time at which to calculate the energy
+			double time				:Time at which to calculate the energy
 			matrix x0				:initial displacement vector
 			matrix xdot0				:initial velocity vector
 			
@@ -298,9 +305,9 @@ double heat_spec_eigen(int size, int bond_ind, int eigen, double time);
 	args:		int size				:size of the system
 			int bond_ind				:index of the particle on the left side of the bond through which we are calculating IHC
 			int eigen				:Eigenvector that is taken as initial displacement vector
-			double time			:Time until which we have to integrate the current
+			double time				:Time until which we have to integrate the current
 			
-	returns:	double h		:Integrated heat current for the specific eigenvector as initial condition and all the
+	returns:	double h				:Integrated heat current for the specific eigenvector as initial condition and all the
 								 initial velocities being zero
 								 
 	Notes:		None
@@ -308,7 +315,7 @@ double heat_spec_eigen(int size, int bond_ind, int eigen, double time);
 
 
 double J_of_xnxdotoft(int size, int bond_ind, double time, matrix x0, matrix xdot0);
-//function to calculate the current through a particular bond at a given instant of time by substituting displacement and velocities of the neighbouring particles as inputs
+//function to calculate the current through a particular bond at a given instant of time by substituting displacement and velocities of the bonding particles at time t directly as inputs
 /*
 	args:		int size				:size of the system
 			int bond_ind				:index of the particle on the left side of the bond through which we are calculating IHC
@@ -324,7 +331,7 @@ double J_of_xnxdotoft(int size, int bond_ind, double time, matrix x0, matrix xdo
 
 
 double Joft(int size, int bond_ind, double time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate the current through a particular bond at a given instant of time using the expression in terms of time
+//function to calculate the current through a particular bond at a given instant of time using the expression directly in terms of time
 /*
 	args:		int size				:size of the system
 			int bond_ind				:index of the particle on the left side of the bond through which we are calculating IHC
@@ -340,7 +347,7 @@ double Joft(int size, int bond_ind, double time, matrix x0, matrix xdot0, bool t
 
 
 double Qoft(int size, int bond_ind, double time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate the integrated heat current Q(t) through a particular bond over a period of `time' using the integrated expression of J
+//function to calculate the integrated heat current Q(t) through a particular bond over a period of `time' using the expression for time integral of J(t)
 /*
 	args:		int size				:size of the system
 			int bond_ind				:index of the particle on the left side of the bond through which we are calculating IHC
@@ -356,7 +363,7 @@ double Qoft(int size, int bond_ind, double time, matrix x0, matrix xdot0, bool t
 
 
 vector Qoftvec(int size, int bond_ind, vector time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate the integrated heat current Q(t) through a particular bond over a period of `time' using the integrated expression of J
+//function to calculate the integrated heat current Q(t) through a particular bond over a period of `time' using the expression for time integral of J(t) for a vector comprising several time values at once.
 /*
 	args:		int size				:size of the system
 			int bond_ind				:index of the particle on the left side of the bond through which we are calculating IHC
@@ -372,7 +379,7 @@ vector Qoftvec(int size, int bond_ind, vector time, matrix x0, matrix xdot0, boo
 
 
 double4_t* boxmuller_sampler(int size, int num_samples, double temp);
-//function to sample position and momentum vectors from gaussian distributions
+//function to sample initial position and momentum vectors from Boltzmann distribution --> gaussian distribution for each variable separately. As discussed in theory
 /*
 	args:		int size				:size of the system or the size of the position and momentum vectors
 			int num_samples				:Number of samples of initial conditions
@@ -386,10 +393,10 @@ double4_t* boxmuller_sampler(int size, int num_samples, double temp);
 */
 
 double sys_hamiltonian(int size, double time, matrix x0, matrix xdot0, bool tilde);
-//function to calculate the total Hamitonian of the system given initial conditions
+//function to calculate the total Hamitonian of the system given certain initial conditions
 /*
 	args:		int size				:size of the system
-			double time			:Time elapsed after the given initial conditions
+			double time				:Time elapsed after the given initial conditions
 			matrix x0				:Initial displacement vector
 			matrix xdot0				:Initial velocity vector
 			tilde					:Boolean variable to decide whether the input vectors are transformed in to tilde 
