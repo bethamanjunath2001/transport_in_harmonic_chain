@@ -7,56 +7,35 @@
 This package is written to do the computationally intensive tasks dealing with one dimensional Harmonic chain of particles hooked to walls on both of 
 its ends. We primarily aim at calculating the quantities related to heat transport in this type of a chain. Lot of mathematical expressions that need to be 
 calculated are in terms of matrices of very large sizes. To perform the matrix computations the package matpack is used which can perform very basic matrix 
-operations such as multiplication, addition, etc. The package defines matrices as arrays of pointers and has special functions to allocate memory for them and free the memory when their usage is done. The user should take a look at the documentation of matpack also before jumping to use the package HARMONIC_H.
+operations such as multiplication, addition, etc. The package defines matrices as arrays of pointers and has special functions to allocate memory for them and free the memory when their usage is done. The user should take a look at the header file of matpack.h also before jumping to use the package harmonic.h.
 
 Numerous functions in this package take the inputs of type `matrix' from matpack and return the objects of the same type too. The user must properly declare 
 and allocate memory for the matrix they want to create themselves for use, using matrix_init function from matpack.
 
 ***However for the matrices that user defines solely to read the outputs of functions in this package, the user need not allocate memory using matrix_init 
-function (matpack). The memory will be allocated inside those function which will be taken by the matrix variable that the user defines. If the user allocates the matrix by themselves(xl − xl −1)2 + (xl +1 − xl )2] ∀ l ∈ Z ∩ (1, N ) (3.2)
-εN = p2
-1
-2m + k
-2
-1
-2
-[(xN − xN −1)2 + 2x2
-N
-] (3.3)
-Now we will take the time derivative of the above expression and proceed with the calculation as follows.
- ̇εl = pl
-m  ̇pl + k
-2 [(xl − xl −1)(  ̇xl −  ̇xl −1) + (xl +1 − xl )(  ̇xl +1 −  ̇xl )] (3.4)
-From Hamilton’s equations of motion
- ̇pl = − ∂H
-∂xl
-= −k (2xl − xl −1 − xl +1) , (3.5)
-(3.6)
-and we know that
-pl = m  ̇xl . (3.7)
-Now substituting the above two expressions in the equation (3.4) we proceed for further calculation.
- ̇εl = − k
-2 2  ̇xl (2xl − xl −1 − xl +1) + k
-2 [(xl − xl −1)(  ̇xl −  ̇xl −1) + (xl +1 − xl )(  ̇xl +1 −  ̇xl )] (3.8)
-= k
-2 [−(xl − xl −1)(  ̇xl +  ̇xl −1) + (xl +1 − xl )(  ̇xl +1 +  ̇xl )] (3.9)
-This can be written as
- ̇εl = −jl +1,l + jl ,l −1 , (3.10)
-7
- in this case anyway, they might lose some memory to memory leaks. The user is strongly advised to free all the matrices they define using free_matrix function(matpack)*** 
+function (matpack). They can just assign the matrix that they want to read into the matrix variable. 
+For the functions in this package where there are intermediate matrix variables needed in the calculations, the memory is properly allocated and freed always.
+When the functions in this package output a matrix variable the user should define a matrix variable before and read the output of the function by assigning it to the defined matrix using '='.
+They should remember to free the matrix when the job is done.
+Let us look at an example:
+
+matrix A;
+matrix_init(A, m, n);		//initialise a mXn matrix variable to read the output of a function
+
+*** 
 
 The user is adviced to free the memory they allocated 
-for any matrix once they are no longer required. The ways to do these operations are described in the documentation of matpack.
+for any matrix once they are no longer required. The ways to do these operations are described in the header file matpack.h.
 
 The functions in this package are declared and documented with all the necessary information in the header file given below. The user can refer to the same 
 while trying to use the package.
 
 The units used for each base quantity are as follows. These are chosen so that they will represent the atomic scale of the chains.
 
-Mass			10^-26 kg						~order of the mass of a carbon atom
-Length			Angstrom unit						~order of the interatomic distances in graphite
-Time			100 femtosecond						~order of the periods of typical molecular vibrations
-Temperature		Kelvin							~SI unit
+Mass M			10^-26 kg						~order of the mass of a carbon atom
+Length L		Angstrom unit						~order of the interatomic distances in graphite
+Time t			100 femtosecond						~order of the periods of typical molecular vibrations
+Temperature T		Kelvin							~SI unit
 
 All the quantities and constants involved are taken to be in these or suitable combinations of these units.
 
