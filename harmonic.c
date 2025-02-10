@@ -29,6 +29,11 @@ printf("#####################################################################\n"
 //###########################################################################################//
 //###############Declaring all the functions to be used in the harmonic chain################//
 //###########################################################################################//
+//All the basic operations on the vector datastructure defined in the header file. 
+//The data structure is defined so that we can do similar operations on a multitude of scalar variables at once and thereby making the code reusable and readable.
+//For example, I used this vector to calculate Q(t) values for a number of time values at once.
+
+
 //addition
 vector vector_add(vector A, vector B){
 vector sum;
@@ -460,7 +465,7 @@ return x;
 
 
 /*#######################################################################################*/
-/***********Function to compute the final velocity vector of all th particles*************/
+/***********Function to compute the final velocity vector of all the particles************/
 /*#######################################################################################*/
 
 matrix xdotoft(int size, double time, matrix x0, matrix xdot0, bool tilde){
@@ -856,9 +861,9 @@ return Q;
 
 
 
-/*######################################################################################################################*/
-/**Function to calculate the IHC through a particular bond as a function of initial conditions and a set of time values**/
-/*######################################################################################################################*/
+/*####################################################################################################################################*/
+/**Function to calculate the set of IHC values through a particular bond as a function of initial conditions and a set of time values**/
+/*####################################################################################################################################*/
 
 
 vector Qoftvec(int size, int bond_ind, vector time, matrix x0, matrix xdot0, bool tilde){
@@ -1138,9 +1143,9 @@ return gauss_samples;
 
 
 
-/*######################################################################################################*/
-/****Function to calculate the total Hamiltonian of the system given the system configuration vectors****/
-/*######################################################################################################*/
+/*#######################################################################################################*/
+/****Function to calculate the total Hamiltonian of the system given the system init condition vectors****/
+/*#######################################################################################################*/
 double sys_hamiltonian(int size, double time, matrix x0, matrix xdot0, bool tilde){
 
 double ham;
