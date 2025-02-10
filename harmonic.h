@@ -23,13 +23,23 @@ The user is adviced to free the memory they allocated for any matrix once they a
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 Let us look at an example:
 ////Example starts
-matrix A;			//initialise a matrix variable
-matrix_init(m, n, &A);		//Allocating a (mXn) matrix variable to read the output of a function
-A = generic_function(list of all the input variables separated by commas)	//Here generic function should output an mXn matrix. The user should take care that the dimensions of the output matches with the defined matrix variable.
 
-//Do whatever is to be done with matrix A.
+matrix A, B;			//initialise two matrix variables A and B.
+matrix_init(m, n, &A);		//Allocating a (mXn) sized memory to hold mXn matrix in it and initialising it to all zero values.
 
-free_matrix(A);			//freeing the memory allocated for the matrix
+//
+Do whatever is required with A. Read values out of it and into it. Use it in matrix operations along with other matrices.
+//
+
+B = generic_function(list of all the input variables separated by commas)	//When we are reading the output matrix we need not initialise it using matrix_init(). Thus did not initialise B.
+
+//
+Do whatever is to be done with matrix B.
+//
+
+free_matrix(A);			
+free_matrix(B);			//freeing the memory allocated for the matrix A and matrix B
+
 ////Example ends
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 *** 
